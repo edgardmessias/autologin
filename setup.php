@@ -15,6 +15,7 @@ function plugin_version_autologin() {
        'name'           => 'Auto Login',
        'version'        => '1.0.0',
        'author'         => 'Edgard Lorraine Messias',
+       'license'        => 'GPLv2+',
        'homepage'       => 'https://github.com/edgardmessias/autologin',
        'minGlpiVersion' => '0.85'
    );
