@@ -16,7 +16,7 @@ function plugin_init_autologin() {
    $cookie_path = ini_get('session.cookie_path');
 
    //For logout, remove COOKIE to prevent automatic login on open index page
-   if (Session::getLoginUserID() && isset($_SERVER['SCRIPT_NAME']) && $_SERVER['SCRIPT_NAME'] === trim($CFG_GLPI['root_doc'], '/') . '/front/logout.php') {
+   if (Session::getLoginUserID() && isset($_SERVER['SCRIPT_NAME']) && $_SERVER['SCRIPT_NAME'] === rtrim($CFG_GLPI['root_doc'], '/') . '/front/logout.php') {
       setcookie($cookie_name, '', time() - 3600, $cookie_path);
       return;
    }
@@ -60,7 +60,7 @@ function plugin_init_autologin() {
 
    //Redirect from login to front page if is authenticated
 
-   if (Session::getLoginUserID() && isset($_SERVER['SCRIPT_NAME']) && $_SERVER['SCRIPT_NAME'] === trim($CFG_GLPI['root_doc'], '/') . '/index.php') {
+   if (Session::getLoginUserID() && isset($_SERVER['SCRIPT_NAME']) && $_SERVER['SCRIPT_NAME'] === rtrim($CFG_GLPI['root_doc'], '/') . '/index.php') {
       $REDIRECT = "";
       if (isset($_POST['redirect']) && (strlen($_POST['redirect']) > 0)) {
          $REDIRECT = "?redirect=" . rawurlencode($_POST['redirect']);
@@ -86,7 +86,7 @@ function plugin_init_autologin() {
 function plugin_version_autologin() {
    return array(
       'name'           => __('Auto Login', 'autologin'),
-      'version'        => '2.0.1',
+      'version'        => '2.0.2',
       'author'         => 'Edgard Lorraine Messias',
       'license'        => 'GPLv2+',
       'homepage'       => 'https://github.com/edgardmessias/autologin',

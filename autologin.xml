@@ -54,6 +54,12 @@ By default, "Remember me" lasts 7 days (For future, add configuration option)
             <compatibility>0.90</compatibility>
             <compatibility>9.1</compatibility>
         </version>
+        <version>
+            <num>2.0.2</num>
+            <compatibility>0.85</compatibility>
+            <compatibility>0.90</compatibility>
+            <compatibility>9.1</compatibility>
+        </version>
     </versions>
     <langs>
         <lang>en_US</lang>
