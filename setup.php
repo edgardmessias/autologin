@@ -1,13 +1,22 @@
 <?php
 
+define('PLUGIN_AUTOLOGIN_VERSION', '2.1.0');
+
 // Init the hooks of the plugins -Needed
 function plugin_init_autologin() {
-   global $CFG_GLPI, $PLUGIN_HOOKS;
+   global $CFG_GLPI, $PLUGIN_HOOKS, $CFG_AUTOLOGIN;
+
+   $CFG_AUTOLOGIN = Config::getConfigurationValues('autologin');
 
    $PLUGIN_HOOKS['csrf_compliant']['autologin'] = true;
 
-   $PLUGIN_HOOKS['display_login']['autologin'] = 'plugin_autologin_display_login';
-   $PLUGIN_HOOKS['init_session']['autologin'] = 'plugin_autologin_init_session';
+   if ($CFG_AUTOLOGIN['login_remember_time']) {
+      $PLUGIN_HOOKS['display_login']['autologin'] = 'plugin_autologin_display_login';
+      $PLUGIN_HOOKS['init_session']['autologin'] = 'plugin_autologin_init_session';
+   }
+
+   Plugin::registerClass('PluginAutologinConfig'
+           , ['addtabon' => ['Config']]);
 
    //Cookie name (Allow multiple GLPI)
    $cookie_name = session_name() . '_rememberme';
@@ -21,18 +30,20 @@ function plugin_init_autologin() {
       return;
    }
 
-   //If logged, create cookie if not exists
-   if (!Session::getLoginUserID() && isset($_COOKIE[$cookie_name])) {
+   //If not logged and has valid cookie, start login
+   if (!Session::getLoginUserID() && isset($_COOKIE[$cookie_name]) && $CFG_AUTOLOGIN['login_remember_time']) {
 
       $auth_succeded = false;
 
       $data = json_decode($_COOKIE[$cookie_name], true);
       if (count($data) === 3) {
-         list ($cookie_id, $cookie_token, $cookie_duration) = $data;
+         list ($cookie_id, $cookie_token, $cookie_expiration) = $data;
+
+         $is_expiration_valid = $cookie_expiration < time() + $CFG_AUTOLOGIN['login_remember_time'];
 
          $token = User::getPersonalToken($cookie_id);
 
-         if ($token !== false && Auth::checkPassword($token, $cookie_token)) {
+         if ($is_expiration_valid && $token !== false && Auth::checkPassword($token, $cookie_token)) {
             $user = new User();
             $user->getFromDB($cookie_id); //true if $token is not false
             //Create fake auth
@@ -52,6 +63,7 @@ function plugin_init_autologin() {
       //remove COOKIE for invalid cookie
       //remove COOKIE for invalid token
       //remove COOKIE for invalid account
+      //remove COOKIE for expiration > time() + login_remember_time
       if (!$auth_succeded) {
          setcookie($cookie_name, '', time() - 3600, $cookie_path);
          unset($_COOKIE[$cookie_name]);
@@ -60,7 +72,10 @@ function plugin_init_autologin() {
 
    //Redirect from login to front page if is authenticated
 
-   if (Session::getLoginUserID() && isset($_SERVER['SCRIPT_NAME']) && $_SERVER['SCRIPT_NAME'] === rtrim($CFG_GLPI['root_doc'], '/') . '/index.php') {
+   if (!isset($_GET["noAUTO"]) &&
+           Session::getLoginUserID() &&
+           isset($_SERVER['SCRIPT_NAME']) &&
+           $_SERVER['SCRIPT_NAME'] === rtrim($CFG_GLPI['root_doc'], '/') . '/index.php') {
       $REDIRECT = "";
       if (isset($_POST['redirect']) && (strlen($_POST['redirect']) > 0)) {
          $REDIRECT = "?redirect=" . rawurlencode($_POST['redirect']);
@@ -85,12 +100,12 @@ function plugin_init_autologin() {
 // Get the name and the version of the plugin - Needed
 function plugin_version_autologin() {
    return array(
-      'name'           => __('Auto Login', 'autologin'),
-      'version'        => '2.0.2',
-      'author'         => 'Edgard Lorraine Messias',
-      'license'        => 'GPLv2+',
-      'homepage'       => 'https://github.com/edgardmessias/autologin',
-      'minGlpiVersion' => '0.85'
+       'name'           => __('Auto Login', 'autologin'),
+       'version'        => PLUGIN_AUTOLOGIN_VERSION,
+       'author'         => 'Edgard Lorraine Messias',
+       'license'        => 'GPLv2+',
+       'homepage'       => 'https://github.com/edgardmessias/autologin',
+       'minGlpiVersion' => '0.85'
    );
 }
 

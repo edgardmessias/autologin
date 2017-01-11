@@ -1,14 +1,30 @@
 <?php
 
 function plugin_autologin_install() {
+
+   $current_config = Config::getConfigurationValues('autologin');
+
+   if (!isset($current_config['login_remember_time'])) {
+      $current_config['login_remember_time'] = HOUR_TIMESTAMP * 7;
+   }
+
+   if (!isset($current_config['login_remember_default'])) {
+      $current_config['login_remember_default'] = 1;
+   }
+
+   Config::setConfigurationValues('autologin', $current_config);
+
    return true;
 }
 
 function plugin_autologin_uninstall() {
+   Config::deleteConfigurationValues('autologin');
+
    return true;
 }
 
 function plugin_autologin_display_login() {
+   global $CFG_AUTOLOGIN;
    echo "\n<!-- Begin AutoLogin -->\n";
    echo "<script type=\"text/javascript\">\n";
    echo "(function() {\n";
@@ -18,7 +34,8 @@ function plugin_autologin_display_login() {
       echo "var newLine = document.createElement('p');\n";
       echo "    newLine.className = 'login_input';\n";
       echo "    newLine.innerHTML = '<label style=\"color: #FCFCFC;\">"
-      . "<input type=\"checkbox\" name=\"rememberme\" id=\"rememberme\" /> "
+      . "<input type=\"checkbox\" name=\"rememberme\" id=\"rememberme\""
+      . ($CFG_AUTOLOGIN['login_remember_default'] ? ' checked="cheched"' : '') . " /> "
       . __('Remember me', 'autologin') . "</label>';\n";
       echo "passwordLine.parentElement.insertBefore(newLine, passwordLine.nextSibling);\n";
    } else {
@@ -28,7 +45,10 @@ function plugin_autologin_display_login() {
       echo "var newLine = document.createElement('div');\n";
       echo "    newLine.className = 'loginrow';\n";
       echo "    newLine.innerHTML = '<span class=\"loginlabel\"><label>" . __('Remember me', 'autologin') . "</label></span>"
-      . "<span class=\"loginformw\" style=\"margin-right: 140px;\"><input type=\"checkbox\" name=\"rememberme\" id=\"rememberme\"\" /></span>';\n";
+      . "<span class=\"loginformw\" style=\"margin-right: 140px;\">"
+      . "<input type=\"checkbox\" name=\"rememberme\" id=\"rememberme\"\""
+      . ($CFG_AUTOLOGIN['login_remember_default'] ? ' checked="cheched"' : '') . " /> "
+      . "</span>';\n";
       echo "passwordLine.parentElement.insertBefore(newLine, passwordLine.nextSibling);\n";
    }
 
@@ -39,6 +59,8 @@ function plugin_autologin_display_login() {
 }
 
 function plugin_autologin_init_session() {
+   global $CFG_AUTOLOGIN;
+
    //If checkbox is not marked, not generate cookie
    if (!isset($_POST['rememberme'])) {
       return;
@@ -47,7 +69,7 @@ function plugin_autologin_init_session() {
    //Cookie name (Allow multiple GLPI)
    $cookie_name = session_name() . '_rememberme';
    //Remember-me duration after login
-   $cookie_duration = 60 * 60 * 24 * 7; //7 days
+   $cookie_duration = $CFG_AUTOLOGIN['login_remember_time']; //7 days
    //Cookie session path
    $cookie_path = ini_get('session.cookie_path');
 
@@ -62,7 +84,7 @@ function plugin_autologin_init_session() {
          $data = json_encode([
              $uid,
              $hash,
-             $cookie_duration,
+             time() + $cookie_duration,
          ]);
 
          //Send cookie to browser

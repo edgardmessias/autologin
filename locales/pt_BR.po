@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2017-01-03 23:01-0200\n"
-"PO-Revision-Date: 2017-01-03 23:01-0200\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2017-01-10 23:29-0200\n"
+"PO-Revision-Date: 2017-01-10 23:32-0200\n"
+"Last-Translator: Edgard Lorraine Messias <edgardmessias@gmail.com>\n"
 "Language-Team: \n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -15,14 +15,32 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_e\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: hook.php:22
+#: hook.php:39 hook.php:47
 msgid "Remember me"
 msgstr "Lembrar-me"
 
-#: setup.php:82
+#: inc/config.class.php:8 setup.php:101
 msgid "Auto Login"
 msgstr "Autenticação Automática"
 
-#: setup.php:94
+# GLPI
+#: inc/config.class.php:50
+msgid "General setup"
+msgstr ""
+
+#: inc/config.class.php:53
+msgid "Time to allow \"Remember Me\""
+msgstr "Tempo para permitir o \"Lembrar-me\""
+
+# GLPI
+#: inc/config.class.php:57
+msgid "Disabled"
+msgstr ""
+
+#: inc/config.class.php:61
+msgid "Default state of checkbox"
+msgstr "Estado padrão da caixa de seleção"
+
+#: setup.php:113
 msgid "This plugin requires GLPI >= 0.85"
 msgstr "Este plugin requer GLPI> = 0.85"
