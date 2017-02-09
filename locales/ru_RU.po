@@ -1,0 +1,49 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-01-10 23:29-0200\n"
+"PO-Revision-Date: 2017-02-09 10:15+0000\n"
+"Last-Translator: Nikolai Petrov <techobsl@yandex.ru>\n"
+"Language-Team: Brazilian Portuguese\n"
+"Language: pt-BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Loco-Source-Locale: ru_RU\n"
+"X-Generator: Loco - https://localise.biz/\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Loco-Parser: loco_parse_po"
+
+# GLPI
+#: inc/config.class.php:50
+msgid "General setup"
+msgstr "Основные настройки"
+
+# GLPI
+#: inc/config.class.php:57
+msgid "Disabled"
+msgstr "Отключено"
+
+#: hook.php:39 hook.php:47
+msgid "Remember me"
+msgstr "Запомнить меня"
+
+#: inc/config.class.php:8 setup.php:101
+msgid "Auto Login"
+msgstr "Авто вход"
+
+#: inc/config.class.php:53
+msgid "Time to allow \"Remember Me\""
+msgstr "Разрешенное время \"Запомнить меня\""
+
+#: inc/config.class.php:61
+msgid "Default state of checkbox"
+msgstr "Состояние флажка по умолчанию"
+
+#: setup.php:113
+msgid "This plugin requires GLPI >= 0.85"
+msgstr "Для этого плагина требуется GLPI> = 0.85"
