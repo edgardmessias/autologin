@@ -105,6 +105,7 @@ function plugin_version_autologin() {
        'author'         => 'Edgard Lorraine Messias',
        'license'        => 'GPLv2+',
        'homepage'       => 'https://github.com/edgardmessias/autologin',
+       'license'        => 'BSD-3-Clause',
        'minGlpiVersion' => '0.85'
    );
 }
